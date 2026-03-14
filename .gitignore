@@ -1,0 +1,13 @@
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+crash.log
+keys/
+*.pem
+*.pub
+.DS_Store
+.idea/
+*.swp
+*.log
